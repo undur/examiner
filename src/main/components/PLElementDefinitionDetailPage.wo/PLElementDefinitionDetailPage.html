@@ -1,0 +1,48 @@
+<wo:PLLook>
+	<style>
+		.p-elem {
+			background-color: rgb(200,200,255,0.3);
+			border: 2px solid blue;
+			font-size: 12px;
+			padding: 2px;
+			display: inline-block;
+			border-radius: 3px;		
+		}
+		
+		.p-desc {
+			display: inline-block;
+			margin: -2px 0px 0px -2px;
+			background-color: rgb(100,100,200);
+			color: white;
+			padding: 2px;
+		}
+	</style>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<h3><wo:str value="$selectedObject.name" /></h3>
+				</div>
+				<div class="card-body">
+					<h2>Elements</h2>
+					<table class="table table-sm table-striped">
+						<wo:repetition list="$selectedObject.dynamicNodes" item="$currentNode">
+							<tr>
+								<td><wo:str value="$currentNode.type" /></td>
+								<td><wo:str value="$currentNode.bindings" /></td>
+							</tr>
+						</wo:repetition>
+					</table>
+					<h2>Preview</h2>
+					<wo:PLNodePreview node="$selectedObject.template" />
+					
+					<h2>HTML</h2>
+					<code style="display: block; white-space: pre"><wo:str value="$selectedObject.htmlString" /></code>
+					
+					<h2>wod</h2>
+					<code style="display: block; white-space: pre"><wo:str value="$selectedObject.wodString" /></code>
+				</div>
+			</div>
+		</div>
+	</div>
+</wo:PLLook>

@@ -1,0 +1,8 @@
+<wo:if condition="$nodeIsHTMLString"><wo:str value="$nodeString" escapeHTML="$escapeHTML" /></wo:if>
+<wo:if condition="$nodeIsHTMLString" negate="$true">
+	<wo:container elementName="span" omitTags="$omitTags" class="p-elem"><span class="p-desc"><wo:str value="$nodeString" escapeHTML="false" /></span>
+		<wo:repetition list="$currentChildren" item="$currentNode">
+			<wo:PLNodePreview node="$currentNode" />
+		</wo:repetition>
+	</wo:container>
+</wo:if>
