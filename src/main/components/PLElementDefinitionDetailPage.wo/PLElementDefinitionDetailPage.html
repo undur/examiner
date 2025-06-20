@@ -26,10 +26,16 @@
 				<div class="card-body">
 					<h2>Elements</h2>
 					<table class="table table-sm table-striped">
+						<tr>
+							<th>Type</th>
+							<th>Declaration name</th>
+							<th>Bindings</th>
+						</tr>
 						<wo:repetition list="$selectedObject.dynamicNodes" item="$currentNode">
 							<tr>
 								<td><wo:str value="$currentNode.type" /></td>
-								<td><wo:str value="$currentNode.bindings" /></td>
+								<td><wo:str value="$currentDeclarationName" /></td>
+								<td><wo:str value="$currentBindingsString" /></td>
 							</tr>
 						</wo:repetition>
 					</table>
