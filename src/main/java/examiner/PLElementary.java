@@ -18,6 +18,9 @@ import com.webobjects.appserver.WOElement;
 
 import er.extensions.components.ERXComponent;
 
+// List Direct Action classes
+// List Bundles
+
 public class PLElementary extends ERXComponent {
 
 	public ElementDefinition currentElementDefinition;
