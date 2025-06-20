@@ -1,31 +1,51 @@
 <wo:PLLook>
-	<div class="card">
-		<div class="card-header">
-			<h3>Elements</h3>
+	<div class="row">
+		<div class="col">
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">Direct actions</h3>
+				</div>
+			</div>
 		</div>
-		<table class="table table-sm table-condensed">
-			<tr>
-				<th></th>
-				<th>Package</th>
-				<th>Name</th>
-				<th>Bundle</th>
-				<th>Type</th>
-				<th>Replaced by</th>
-			</tr>
-			<wo:repetition list="$elementDefinitions" item="$currentElementDefinition">
-				<tr>
-					<td>
-						<wo:link action="$view">
-							<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-						</wo:link>
-					</td>
-					<td><wo:str value="$currentElementDefinition.elementClass.packageName" /></td>
-					<td><wo:str value="$currentElementDefinition.name" /></td>
-					<td><wo:str value="$currentElementDefinition.bundle.name" /></td>
-					<td><wo:str value="$currentElementDefinition.type" /></td>
-					<td><wo:str value="$currentElementDefinition.replacementElement" /></td>
-				</tr>
-			</wo:repetition>
-		</table>
+		<div class="col">
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">Bundles</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row mt-3">
+		<div class="col">
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">Elements</h3>
+				</div>
+				<table class="table table-sm table-condensed">
+					<tr>
+						<th></th>
+						<th>Package</th>
+						<th>Name</th>
+						<th>Bundle</th>
+						<th>Type</th>
+						<th>Replaced by</th>
+					</tr>
+					<wo:repetition list="$elementDefinitions" item="$currentElementDefinition">
+						<tr>
+							<td>
+								<wo:link action="$view">
+									<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+								</wo:link>
+							</td>
+							<td><wo:str value="$currentElementDefinition.elementClass.packageName" /></td>
+							<td><wo:str value="$currentElementDefinition.name" /></td>
+							<td><wo:str value="$currentElementDefinition.bundle.name" /></td>
+							<td><wo:str value="$currentElementDefinition.type" /></td>
+							<td><wo:str value="$currentElementDefinition.replacementElement" /></td>
+						</tr>
+					</wo:repetition>
+				</table>
+			</div>
+		</div>
 	</div>
 </wo:PLLook>
