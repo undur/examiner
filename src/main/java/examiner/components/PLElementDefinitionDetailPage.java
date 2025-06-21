@@ -25,15 +25,25 @@ public class PLElementDefinitionDetailPage extends WOComponent {
 		List<String> descriptions = new ArrayList<>();
 
 		for( Entry<String, NGBindingValue> binding : currentNode.bindings().entrySet() ) {
-			StringBuilder b = new StringBuilder();
-			b.append( binding.getKey() );
+			final String bKey = binding.getKey();
+			final NGBindingValue bValue = binding.getValue();
+
+			final StringBuilder b = new StringBuilder();
+
+			b.append( bKey );
 			b.append( "=" );
 
-			if( binding.getValue().isQuoted() ) {
-				b.append( "\"%s\"".formatted( binding.getValue().value() ) );
+			if( currentNode.isInline() ) {
+				b.append( bValue.value() );
 			}
 			else {
-				b.append( "$" + binding.getValue().value() );
+				// FIXME: This isQuoted stuff just _needs_ to get fixed in the parser // Hugi 2025-06-21
+				if( bValue.isQuoted() ) {
+					b.append( "\"%s\"".formatted( bValue.value() ) );
+				}
+				else {
+					b.append( "$" + bValue.value() );
+				}
 			}
 
 			descriptions.add( b.toString() );
