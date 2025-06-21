@@ -5,13 +5,14 @@
 				<div class="card-header">
 					<h3 class="card-title">Direct actions</h3>
 				</div>
-				<table class="table table-sm table-condensed">
+				<table class="table table-sm table-condensed card-table">
 					<tr>
 						<th></th>
 						<th>Package</th>
 						<th>Name</th>
 						<th>Bundle</th>
 						<th>Superclass</th>
+						<th>DA methods</th>
 					</tr>
 					<wo:repetition list="$directActionDefinitions" item="$currentDirectAction">
 						<tr>
@@ -22,9 +23,9 @@
 							</td>
 							<td><wo:str value="$currentDirectAction.directActionClass.packageName" /></td>
 							<td><wo:str value="$currentDirectAction.directActionClass.simpleName" /></td>
+							<td><wo:str value="$currentDirectAction.bundle.name" /></td>
 							<td><wo:str value="$currentDirectAction.directActionClass.superclass.simpleName" /></td>
-							<td></td>
-							<td></td>
+							<td><wo:str value="$currentDirectAction.directActionMethods.size" /></td>
 						</tr>
 					</wo:repetition>
 				</table>
@@ -35,6 +36,26 @@
 				<div class="card-header">
 					<h3 class="card-title">Bundles</h3>
 				</div>
+				<table class="table table-sm table-condensed card-table">
+					<tr>
+						<th></th>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Version</th>
+					</tr>
+					<wo:repetition list="$bundleDefinitions" item="$currentBundle">
+						<tr>
+							<td>
+								<wo:link action="$viewDirectAction">
+									<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+								</wo:link>
+							</td>
+							<td><wo:str value="$currentBundle.bundle.name" /></td>
+							<td><wo:str value="$currentBundle.bundle.class.simpleName" /></td>
+							<td><wo:str value="$currentBundle.bundle.versionString" /></td>
+						</tr>
+					</wo:repetition>
+				</table>
 			</div>
 		</div>
 	</div>
