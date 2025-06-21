@@ -4,7 +4,7 @@ import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WORequest;
 
 import er.extensions.appserver.ERXDirectAction;
-import examiner.components.PLElementary;
+import examiner.components.PLExaminerMain;
 
 public class PLExaminerAction extends ERXDirectAction {
 
@@ -15,6 +15,6 @@ public class PLExaminerAction extends ERXDirectAction {
 
 	@Override
 	public WOActionResults defaultAction() {
-		return pageWithName( PLElementary.class );
+		return pageWithName( PLExaminerMain.class );
 	}
 }

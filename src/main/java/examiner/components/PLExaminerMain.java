@@ -14,12 +14,12 @@ import examiner.ElementDefinitions;
 // List Direct Action classes
 // List Bundles
 
-public class PLElementary extends ERXComponent {
+public class PLExaminerMain extends ERXComponent {
 
 	public ElementDefinition currentElementDefinition;
 	public DirectActionDefinition currentDirectAction;
 
-	public PLElementary( WOContext context ) {
+	public PLExaminerMain( WOContext context ) {
 		super( context );
 	}
 
