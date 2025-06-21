@@ -30,7 +30,7 @@ public class ElementDefinitions {
 	/**
 	 * FIXME: Missing implementation of search for classless components
 	 */
-	public static List<String> classlessComponents() {
+	private static List<String> classlessComponents() {
 		return List.of();
 	}
 }

@@ -15,11 +15,15 @@ import org.reflections.util.ConfigurationBuilder;
 public class Util {
 
 	/**
+	 * A shared instance of Reflections for locating all of our classy stuff
+	 */
+	private static final Reflections REFLECTIONS = createReflectionsInstance();
+
+	/**
 	 * @return A list of all subclasses of the given class on the classpath
 	 */
 	public static List locateSubclassesOf( Class clazz ) {
-		final ConfigurationBuilder config = new ConfigurationBuilder().setUrls( ClasspathHelper.forJavaClassPath() ).addScanners( Scanners.SubTypes );
-		final Reflections reflections = new Reflections( config );
+		final Reflections reflections = createReflectionsInstance();
 
 		final Set elementClasses = reflections.get( SubTypes.of( clazz ).asClass() );
 
@@ -32,5 +36,14 @@ public class Util {
 				.toList();
 
 		return new ArrayList<>( sorted );
+	}
+
+	/**
+	 * @return A new Reflections instance that searches the entire classpath
+	 */
+	private static Reflections createReflectionsInstance() {
+		final ConfigurationBuilder config = new ConfigurationBuilder().setUrls( ClasspathHelper.forJavaClassPath() ).addScanners( Scanners.SubTypes );
+		final Reflections reflections = new Reflections( config );
+		return reflections;
 	}
 }

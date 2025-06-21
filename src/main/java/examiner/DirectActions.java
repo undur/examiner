@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.webobjects.appserver.WODirectAction;
+import com.webobjects.foundation.NSBundle;
 
 public class DirectActions {
 
@@ -24,18 +25,22 @@ public class DirectActions {
 		public DirectActionDefinition( Class<? extends WODirectAction> directActionClass ) {
 			this( directActionClass, actionMethods( directActionClass ) );
 		}
-	}
 
-	private static List<Method> actionMethods( Class clazz ) {
-		final List<Method> list = new ArrayList<>();
-
-		for( final Method method : clazz.getDeclaredMethods() ) {
-			// FIXME: Should we bother checking for the return type and access specifiers as well? // Hugi 2025-06-21
-			if( method.getName().endsWith( "Action" ) ) {
-				list.add( method );
-			}
+		public NSBundle bundle() {
+			return NSBundle.bundleForClass( directActionClass() );
 		}
 
-		return list;
+		private static List<Method> actionMethods( Class clazz ) {
+			final List<Method> list = new ArrayList<>();
+
+			for( final Method method : clazz.getDeclaredMethods() ) {
+				// FIXME: Should we bother checking for the return type and access specifiers as well? // Hugi 2025-06-21
+				if( method.getName().endsWith( "Action" ) ) {
+					list.add( method );
+				}
+			}
+
+			return list;
+		}
 	}
 }
