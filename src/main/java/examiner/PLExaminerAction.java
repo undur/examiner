@@ -5,9 +5,9 @@ import com.webobjects.appserver.WORequest;
 
 import er.extensions.appserver.ERXDirectAction;
 
-public class Elementary extends ERXDirectAction {
+public class PLExaminerAction extends ERXDirectAction {
 
-	public Elementary( WORequest aRequest ) {
+	public PLExaminerAction( WORequest aRequest ) {
 		super( aRequest );
 
 	}
