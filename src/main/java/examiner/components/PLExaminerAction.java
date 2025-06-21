@@ -1,4 +1,4 @@
-package examiner;
+package examiner.components;
 
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WORequest;

@@ -1,4 +1,4 @@
-package examiner;
+package examiner.components;
 
 import java.util.List;
 

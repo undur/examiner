@@ -1,4 +1,4 @@
-package examiner;
+package examiner.components;
 
 import java.util.List;
 
@@ -7,6 +7,9 @@ import com.webobjects.appserver.WOContext;
 import com.webobjects.appserver.WOElement;
 
 import er.extensions.components.ERXComponent;
+import examiner.DirectActions;
+import examiner.ElementDefinition;
+import examiner.ElementDefinitions;
 
 // List Direct Action classes
 // List Bundles

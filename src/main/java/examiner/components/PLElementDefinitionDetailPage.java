@@ -1,4 +1,4 @@
-package examiner;
+package examiner.components;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import com.webobjects.appserver.WOComponent;
 import com.webobjects.appserver.WOContext;
 
+import examiner.ElementDefinition;
 import ng.appserver.templating.parser.NGDeclaration;
 import ng.appserver.templating.parser.NGDeclaration.NGBindingValue;
 import ng.appserver.templating.parser.model.PBasicNode;
