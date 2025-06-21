@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
-import com.webobjects.appserver.WOElement;
 
 import er.extensions.components.ERXComponent;
 import examiner.DirectActions;
+import examiner.DirectActions.DirectActionDefinition;
 import examiner.ElementDefinition;
 import examiner.ElementDefinitions;
 
@@ -17,7 +17,7 @@ import examiner.ElementDefinitions;
 public class PLElementary extends ERXComponent {
 
 	public ElementDefinition currentElementDefinition;
-	public Class currentDirectActionClass;
+	public DirectActionDefinition currentDirectAction;
 
 	public PLElementary( WOContext context ) {
 		super( context );
@@ -33,7 +33,7 @@ public class PLElementary extends ERXComponent {
 		return ElementDefinitions.elementDefinitions();
 	}
 
-	public List<Class<? extends WOElement>> directActionClasses() {
-		return DirectActions.directActionClasses();
+	public List<DirectActionDefinition> directActionDefinitions() {
+		return DirectActions.directActionDefinitions();
 	}
 }

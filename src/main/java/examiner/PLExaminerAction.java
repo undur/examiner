@@ -1,9 +1,10 @@
-package examiner.components;
+package examiner;
 
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WORequest;
 
 import er.extensions.appserver.ERXDirectAction;
+import examiner.components.PLElementary;
 
 public class PLExaminerAction extends ERXDirectAction {
 

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
@@ -18,7 +18,8 @@ public class Util {
 	 * @return A list of all subclasses of the given class on the classpath
 	 */
 	public static List locateSubclassesOf( Class clazz ) {
-		final Reflections reflections = new Reflections( new ConfigurationBuilder().setUrls( ClasspathHelper.forJavaClassPath() ).addScanners( new SubTypesScanner() ) );
+		final ConfigurationBuilder config = new ConfigurationBuilder().setUrls( ClasspathHelper.forJavaClassPath() ).addScanners( Scanners.SubTypes );
+		final Reflections reflections = new Reflections( config );
 
 		final Set elementClasses = reflections.get( SubTypes.of( clazz ).asClass() );
 
