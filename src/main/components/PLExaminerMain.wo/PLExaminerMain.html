@@ -98,4 +98,25 @@
 			</div>
 		</div>
 	</div>
+	<div class="row mt-3">
+		<div class="col">
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">Used</h3>
+				</div>
+				<table class="table table-sm table-condensed">
+					<tr>
+						<th>Element name</th>
+						<th>Count</th>
+					</tr>
+					<wo:repetition list="$entries" item="$entry">
+						<tr>
+							<td><wo:str value="$entry.key" /></td>
+							<td><wo:str value="$entry.value" /></td>
+						</tr>
+					</wo:repetition>
+				</table>
+			</div>
+		</div>
+	</div>
 </wo:PLLook>
