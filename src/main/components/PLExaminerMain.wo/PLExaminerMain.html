@@ -42,6 +42,7 @@
 						<th>Name</th>
 						<th>Type</th>
 						<th>Version</th>
+						<th></th>
 					</tr>
 					<wo:repetition list="$bundleDefinitions" item="$currentBundle">
 						<tr>
@@ -53,6 +54,11 @@
 							<td><wo:str value="$currentBundle.bundle.name" /></td>
 							<td><wo:str value="$currentBundle.bundle.class.simpleName" /></td>
 							<td><wo:str value="$currentBundle.bundle.versionString" /></td>
+							<td>
+								<wo:if condition="$currentBundle.isMain">
+									<span class="badge bg-azure text-azure-fg">Main bundle</span>
+								</wo:if>
+							</td>
 						</tr>
 					</wo:repetition>
 				</table>
