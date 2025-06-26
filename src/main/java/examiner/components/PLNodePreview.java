@@ -29,7 +29,7 @@ public class PLNodePreview extends ERXNonSynchronizingComponent {
 		}
 
 		if( node() instanceof PBasicNode p ) {
-			return p.tag().childrenWithStringsProcessedAndCombined();
+			return p.children();
 		}
 
 		return null;
@@ -42,7 +42,7 @@ public class PLNodePreview extends ERXNonSynchronizingComponent {
 
 		return switch( node() ) {
 			case PGroupNode n -> "PGroupNode";
-			case PBasicNode n -> n.tag().declaration().type(); /* + "<br>" + n.tag().declaration().bindings().toString(); */
+			case PBasicNode n -> n.type(); /* + "<br>" + n.tag().declaration().bindings().toString(); */
 			case PCommentNode n -> "";
 			case PHTMLNode n -> n.value();
 		};
@@ -60,7 +60,7 @@ public class PLNodePreview extends ERXNonSynchronizingComponent {
 		return switch( node() ) {
 			case PGroupNode n -> false;
 			case PBasicNode n -> {
-				final List<PNode> children = n.tag().childrenWithStringsProcessedAndCombined();
+				final List<PNode> children = n.children();
 				yield children == null || children.isEmpty();
 			}
 			case PCommentNode n -> true;

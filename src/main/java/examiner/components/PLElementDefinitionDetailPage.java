@@ -8,7 +8,6 @@ import com.webobjects.appserver.WOComponent;
 import com.webobjects.appserver.WOContext;
 
 import examiner.ElementDefinition;
-import ng.appserver.templating.parser.NGDeclaration;
 import ng.appserver.templating.parser.NGDeclaration.NGBindingValue;
 import ng.appserver.templating.parser.model.PBasicNode;
 
@@ -56,7 +55,6 @@ public class PLElementDefinitionDetailPage extends WOComponent {
 	 * @return The name of the declaration, if it's not an inline declaration
 	 */
 	public String currentDeclarationName() {
-		final NGDeclaration d = currentNode.tag().declaration();
-		return d.isInline() ? null : d.name();
+		return currentNode.isInline() ? null : currentNode.declarationName();
 	}
 }
