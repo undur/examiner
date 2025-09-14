@@ -12,8 +12,8 @@ import com.webobjects.foundation.NSBundle;
 
 import er.extensions.components.ERXComponent;
 import examiner.BundleDefinition;
+import examiner.DirectActionDefinition;
 import examiner.DirectActions;
-import examiner.DirectActions.DirectActionDefinition;
 import examiner.ElementDefinition;
 import examiner.ElementDefinitions;
 import ng.appserver.templating.parser.model.PBasicNode;

@@ -12,6 +12,7 @@
 						<th>Name</th>
 						<th>Bundle</th>
 						<th>Superclass</th>
+						<th></th>
 						<th>DA methods</th>
 					</tr>
 					<wo:repetition list="$directActionDefinitions" item="$currentDirectAction">
@@ -25,6 +26,7 @@
 							<td><wo:str value="$currentDirectAction.directActionClass.simpleName" /></td>
 							<td><wo:str value="$currentDirectAction.bundle.name" /></td>
 							<td><wo:str value="$currentDirectAction.directActionClass.superclass.simpleName" /></td>
+							<td><wo:if condition="$currentDirectAction.isAbstract"><span class="badge badge-info">abstract</span></wo:if></td>
 							<td><wo:str value="$currentDirectAction.directActionMethods.size" /></td>
 						</tr>
 					</wo:repetition>
