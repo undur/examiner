@@ -1,5 +1,7 @@
 package examiner.components;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.Map.Entry;
 
 import com.webobjects.appserver.WOActionResults;
 import com.webobjects.appserver.WOContext;
+import com.webobjects.appserver.WORequestHandler;
 import com.webobjects.foundation.NSBundle;
 
 import er.extensions.components.ERXComponent;
@@ -20,11 +23,13 @@ import ng.appserver.templating.parser.model.PBasicNode;
 
 // List Direct Action classes
 // List Bundles
+// List Request handlers
 
 public class PLExaminerMain extends ERXComponent {
 
 	public ElementDefinition currentElementDefinition;
 	public DirectActionDefinition currentDirectAction;
+	public RequestHandlerDefinition currentRequestHandler;
 	public BundleDefinition currentBundle;
 
 	private List<ElementDefinition> _elementDefinitions;
@@ -82,5 +87,22 @@ public class PLExaminerMain extends ERXComponent {
 		}
 
 		return map;
+	}
+
+	// FIXME: Move to separate file
+	public record RequestHandlerDefinition( String key, WORequestHandler requestHandler ) {}
+
+	public List<RequestHandlerDefinition> requestHandlerDefinitions() {
+		final List<RequestHandlerDefinition> l = new ArrayList<>();
+
+		for( Object object : application().registeredRequestHandlerKeys() ) {
+			final String key = object.toString();
+			final WORequestHandler handler = application().requestHandlerForKey( key );
+			l.add( new RequestHandlerDefinition( key, handler ) );
+		}
+
+		Collections.sort( l, Comparator.comparing( r -> r.requestHandler().getClass().getName() ) );
+
+		return l;
 	}
 }
