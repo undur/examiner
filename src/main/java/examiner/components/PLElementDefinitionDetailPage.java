@@ -33,16 +33,19 @@ public class PLElementDefinitionDetailPage extends WOComponent {
 			b.append( "=" );
 
 			if( currentNode.isInline() ) {
-				b.append( bValue.value() );
+				b.append( "bValue.value()" );
 			}
 			else {
 				// FIXME: This isQuoted stuff just _needs_ to get fixed in the parser // Hugi 2025-06-21
+				/*
 				if( bValue.isQuoted() ) {
 					b.append( "\"%s\"".formatted( bValue.value() ) );
 				}
 				else {
 					b.append( "$" + bValue.value() );
 				}
+				*/
+				b.append( "Trololololo" );
 			}
 
 			descriptions.add( b.toString() );

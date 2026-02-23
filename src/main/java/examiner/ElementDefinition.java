@@ -17,8 +17,8 @@ import ng.appserver.templating.parser.NGDeclarationFormatException;
 import ng.appserver.templating.parser.NGHTMLFormatException;
 import ng.appserver.templating.parser.NGTemplateParser;
 import ng.appserver.templating.parser.model.PBasicNode;
-import ng.appserver.templating.parser.model.PGroupNode;
 import ng.appserver.templating.parser.model.PNode;
+import ng.appserver.templating.parser.model.PRootNode;
 
 public record ElementDefinition( String name, Class<? extends WOElement> elementClass ) {
 
@@ -158,14 +158,14 @@ public record ElementDefinition( String name, Class<? extends WOElement> element
 		return false;
 	}
 
-	public PGroupNode template() {
+	public PRootNode template() {
 
 		if( htmlString() == null ) {
 			return null;
 		}
 
 		try {
-			return (PGroupNode)new NGTemplateParser( htmlString(), wodString() ).parse();
+			return (PRootNode)new NGTemplateParser( htmlString(), wodString() ).parse();
 		}
 		catch( NGDeclarationFormatException | NGHTMLFormatException e ) {
 			throw new RuntimeException( e );
@@ -190,7 +190,7 @@ public record ElementDefinition( String name, Class<? extends WOElement> element
 
 		// FIXME. Sucky sucky, checking twice for child-containing types. We should really have a "hasChildren" interface on the nodes or something // Hugi 2025-06-20
 
-		if( node instanceof PGroupNode parent ) {
+		if( node instanceof PRootNode parent ) {
 			for( PNode child : parent.children() ) {
 				collectBasicNodes( child, result );
 			}

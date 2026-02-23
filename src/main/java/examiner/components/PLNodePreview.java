@@ -7,9 +7,10 @@ import com.webobjects.appserver.WOContext;
 import er.extensions.components.ERXNonSynchronizingComponent;
 import ng.appserver.templating.parser.model.PBasicNode;
 import ng.appserver.templating.parser.model.PCommentNode;
-import ng.appserver.templating.parser.model.PGroupNode;
 import ng.appserver.templating.parser.model.PHTMLNode;
 import ng.appserver.templating.parser.model.PNode;
+import ng.appserver.templating.parser.model.PRawNode;
+import ng.appserver.templating.parser.model.PRootNode;
 
 public class PLNodePreview extends ERXNonSynchronizingComponent {
 
@@ -24,7 +25,7 @@ public class PLNodePreview extends ERXNonSynchronizingComponent {
 	}
 
 	public List<PNode> currentChildren() {
-		if( node() instanceof PGroupNode p ) {
+		if( node() instanceof PRootNode p ) {
 			return p.children();
 		}
 
@@ -41,10 +42,11 @@ public class PLNodePreview extends ERXNonSynchronizingComponent {
 		}
 
 		return switch( node() ) {
-			case PGroupNode n -> "PGroupNode";
+			case PRootNode n -> "PRootNode";
 			case PBasicNode n -> n.type(); /* + "<br>" + n.tag().declaration().bindings().toString(); */
 			case PCommentNode n -> "";
 			case PHTMLNode n -> n.value();
+			case PRawNode n -> "Raw node";
 		};
 	}
 
@@ -58,7 +60,7 @@ public class PLNodePreview extends ERXNonSynchronizingComponent {
 
 	public boolean omitTags() {
 		return switch( node() ) {
-			case PGroupNode n -> false;
+			case PRootNode n -> false;
 			case PBasicNode n -> {
 				final List<PNode> children = n.children();
 				yield children == null || children.isEmpty();
