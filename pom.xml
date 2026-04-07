@@ -46,7 +46,7 @@
 			<version>${wonder.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>is.rebbi</groupId>
+			<groupId>is.rebbi.parsley</groupId>
 			<artifactId>parsley</artifactId>
 			<version>1.4.0-SNAPSHOT</version>
 		</dependency>
