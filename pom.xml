@@ -13,7 +13,7 @@
 		<webobjects.version>5.4.3</webobjects.version>
 
 		<wonder.group>is.rebbi.slim</wonder.group>
-		<wonder.version>8.0.2</wonder.version>
+		<wonder.version>8.0.3</wonder.version>
 
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>is.rebbi.parsley</groupId>
 			<artifactId>parsley</artifactId>
-			<version>1.5.0</version>
+			<version>1.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.reflections</groupId>
