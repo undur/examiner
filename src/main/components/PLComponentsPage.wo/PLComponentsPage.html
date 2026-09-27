@@ -1,0 +1,30 @@
+<wo:PLLook section="components" pretitle="Components" title="$title" subtitle="Components with a template, and whether Parsley parses it.">
+	<div class="card">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><wo:link actionClass="PLExaminerAction" directActionName="components" class="$applicationTabClass">Application <span class="badge bg-secondary-lt ms-1"><wo:str value="$examination.applicationComponents.size" /></span></wo:link></li>
+				<li class="nav-item"><wo:link actionClass="PLExaminerAction" directActionName="components" ?scope="all" class="$allTabClass">All, with frameworks <span class="badge bg-secondary-lt ms-1"><wo:str value="$examination.components.size" /></span></wo:link></li>
+			</ul>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-vcenter card-table table-hover">
+				<thead><tr><th>Component</th><th>Package</th><th>Bundle</th><th>Template</th><th class="text-end">Elements</th><th>Parses</th></tr></thead>
+				<tbody>
+					<wo:repetition list="$components" item="$currentDefinition">
+						<tr>
+							<td><wo:link actionClass="PLExaminerAction" directActionName="component" ?name="$currentDefinition.name"><wo:str value="$currentDefinition.name" /></wo:link></td>
+							<td class="text-secondary"><wo:str value="$currentDefinition.elementClass.packageName" /></td>
+							<td class="text-secondary"><wo:str value="$currentDefinition.bundle.name" /></td>
+							<td class="text-secondary"><wo:str value="$currentTemplateKind" /></td>
+							<td class="text-end"><wo:str value="$currentDefinition.dynamicNodes.size" /></td>
+							<td>
+								<wo:if condition="$currentDefinition.parses"><span class="badge bg-green-lt">Yes</span></wo:if>
+								<wo:if condition="$currentDefinition.parseError"><span class="badge bg-red-lt">No</span></wo:if>
+							</td>
+						</tr>
+					</wo:repetition>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</wo:PLLook>

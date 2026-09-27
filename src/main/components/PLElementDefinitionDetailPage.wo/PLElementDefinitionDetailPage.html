@@ -1,55 +1,83 @@
-<wo:PLLook>
+<wo:PLLook section="components" pretitle="Component" title="$selectedObject.name" subtitle="$selectedObject.elementClass.name">
 	<style>
-		.p-elem {
-			background-color: rgb(200,200,255,0.3);
-			border: 2px solid blue;
-			font-size: 12px;
-			padding: 2px;
-			display: inline-block;
-			border-radius: 3px;
-			margin: 2px;		
-		}
-		
-		.p-desc {
-			display: inline-block;
-			margin: -2px 0px 0px -2px;
-			background-color: rgb(100,100,200);
-			color: white;
-			padding: 2px;
-			vertical-align: top;
-		}
+		.p-elem { background-color: var(--tblr-primary-lt); border: 1px solid var(--tblr-primary); font-size: 12px; padding: 2px; display: inline-block; border-radius: 3px; margin: 2px; }
+		.p-desc { display: inline-block; margin: -2px 4px 0 -2px; background-color: var(--tblr-primary); color: white; padding: 1px 4px; vertical-align: top; border-radius: 2px 0 2px 0; }
+		.p-html { font-family: var(--tblr-font-monospace); font-size: 11px; color: var(--tblr-secondary); white-space: pre-wrap; }
 	</style>
-	<div class="row">
-		<div class="col-md-12">
+	<div class="row row-cards">
+		<div class="col-lg-4">
 			<div class="card">
-				<div class="card-header">
-					<h3><wo:str value="$selectedObject.name" /></h3>
-				</div>
 				<div class="card-body">
-					<h2>Elements</h2>
-					<table class="table table-sm table-striped">
-						<tr>
-							<th>Type</th>
-							<th>Declaration name</th>
-							<th>Bindings</th>
-						</tr>
-						<wo:repetition list="$selectedObject.dynamicNodes" item="$currentNode">
-							<tr>
-								<td><wo:str value="$currentNode.type" /></td>
-								<td><wo:str value="$currentDeclarationName" /></td>
-								<td><wo:str value="$currentBindingsString" /></td>
-							</tr>
-						</wo:repetition>
-					</table>
-					<h2>Preview</h2>
-					<wo:PLNodePreview node="$selectedObject.template" />
-					
-					<h2>HTML</h2>
-					<code style="display: block; white-space: pre"><wo:str value="$selectedObject.htmlString" /></code>
-					
-					<h2>wod</h2>
-					<code style="display: block; white-space: pre"><wo:str value="$selectedObject.wodString" /></code>
+					<div class="datagrid">
+						<div class="datagrid-item"><div class="datagrid-title">Bundle</div><div class="datagrid-content"><wo:str value="$selectedObject.bundle.name" /></div></div>
+						<div class="datagrid-item"><div class="datagrid-title">Type</div><div class="datagrid-content"><wo:str value="$selectedObject.type" /></div></div>
+						<div class="datagrid-item"><div class="datagrid-title">Superclass</div><div class="datagrid-content mono"><wo:str value="$selectedObject.elementClass.superclass.simpleName" /></div></div>
+						<div class="datagrid-item"><div class="datagrid-title">Template</div><div class="datagrid-content"><wo:str value="$templateKind" /></div></div>
+						<div class="datagrid-item"><div class="datagrid-title">Parses</div><div class="datagrid-content">
+							<wo:if condition="$selectedObject.parses"><span class="badge bg-green-lt">Yes</span></wo:if>
+							<wo:if condition="$selectedObject.parseError"><span class="badge bg-red-lt">No</span></wo:if>
+							<wo:if condition="$selectedObject.hasTemplate" negate="$true"><span class="text-secondary">No template</span></wo:if>
+						</div></div>
+						<div class="datagrid-item"><div class="datagrid-title">Elements</div><div class="datagrid-content"><wo:str value="$selectedObject.dynamicNodes.size" /></div></div>
+					</div>
 				</div>
+			</div>
+		</div>
+		<div class="col-lg-8">
+			<wo:if condition="$selectedObject.parseError">
+				<div class="alert alert-danger">
+					<h4 class="alert-title">The template doesn't parse<wo:if condition="$errorLine"> (line <wo:str value="$errorLine" />, column <wo:str value="$selectedObject.parseErrorColumn" />)</wo:if></h4>
+					<div class="text-secondary"><wo:str value="$selectedObject.parseError" /></div>
+				</div>
+			</wo:if>
+			<div class="card">
+				<div class="card-header"><h3 class="card-title">Elements in the template</h3></div>
+				<wo:if condition="$selectedObject.dynamicNodes.isEmpty">
+					<div class="card-body text-secondary">None.</div>
+				</wo:if>
+				<wo:if condition="$selectedObject.dynamicNodes.isEmpty" negate="$true">
+					<div class="table-responsive">
+						<table class="table table-vcenter card-table">
+							<thead><tr><th>Element</th><th>Declaration</th><th>Bindings</th></tr></thead>
+							<tbody>
+								<wo:repetition list="$selectedObject.dynamicNodes" item="$currentNode">
+									<tr>
+										<td><wo:link actionClass="PLExaminerAction" directActionName="element" ?name="$currentNode.type" class="mono"><wo:str value="$currentNode.type" /></wo:link></td>
+										<td class="mono text-secondary"><wo:str value="$currentDeclarationName" /></td>
+										<td class="wrap mono"><wo:str value="$currentBindingsString" /></td>
+									</tr>
+								</wo:repetition>
+							</tbody>
+						</table>
+					</div>
+				</wo:if>
+			</div>
+		</div>
+	</div>
+
+	<div class="card mt-3">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
+				<li class="nav-item"><a href="#tab-html" class="nav-link active" data-bs-toggle="tab">HTML</a></li>
+				<wo:if condition="$hasWod"><li class="nav-item"><a href="#tab-wod" class="nav-link" data-bs-toggle="tab">wod</a></li></wo:if>
+				<wo:if condition="$selectedObject.parses"><li class="nav-item"><a href="#tab-structure" class="nav-link" data-bs-toggle="tab">Structure</a></li></wo:if>
+			</ul>
+		</div>
+		<div class="card-body">
+			<div class="tab-content">
+				<div class="tab-pane active show" id="tab-html">
+					<div class="source"><div class="lines"><wo:repetition list="$htmlLines" item="$currentLine"><wo:container elementName="span" class="$currentLineClass"><wo:str value="$currentLine.text" /></wo:container></wo:repetition></div></div>
+				</div>
+				<wo:if condition="$hasWod">
+					<div class="tab-pane" id="tab-wod">
+						<div class="source"><div class="lines"><wo:repetition list="$wodLines" item="$currentLine"><span class="line"><wo:str value="$currentLine.text" /></span></wo:repetition></div></div>
+					</div>
+				</wo:if>
+				<wo:if condition="$selectedObject.parses">
+					<div class="tab-pane" id="tab-structure">
+						<wo:PLNodePreview node="$selectedObject.template" />
+					</div>
+				</wo:if>
 			</div>
 		</div>
 	</div>

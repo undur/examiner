@@ -1,0 +1,23 @@
+<wo:PLLook section="directActions" pretitle="Direct actions" title="Direct action classes" subtitle="Every WODirectAction subclass, and its action methods.">
+	<div class="card">
+		<div class="table-responsive">
+			<table class="table table-vcenter card-table">
+				<thead><tr><th>Class</th><th>Package</th><th>Bundle</th><th>Superclass</th><th>Actions</th></tr></thead>
+				<tbody>
+					<wo:repetition list="$examination.directActionDefinitions" item="$currentDirectAction">
+						<tr>
+							<td>
+								<wo:str value="$currentDirectAction.directActionClass.simpleName" />
+								<wo:if condition="$currentDirectAction.isAbstract"><span class="badge bg-secondary-lt ms-1">abstract</span></wo:if>
+							</td>
+							<td class="text-secondary"><wo:str value="$currentDirectAction.directActionClass.packageName" /></td>
+							<td class="text-secondary"><wo:str value="$currentDirectAction.bundle.name" /></td>
+							<td class="text-secondary"><wo:str value="$currentDirectAction.directActionClass.superclass.simpleName" /></td>
+							<td class="wrap mono"><wo:str value="$currentActionNames" /></td>
+						</tr>
+					</wo:repetition>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</wo:PLLook>

@@ -1,0 +1,39 @@
+<wo:PLLook section="elements" pretitle="Element" title="$usage.name" subtitle="$subtitle">
+	<div class="row row-cards">
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-body">
+					<div class="datagrid">
+						<div class="datagrid-item"><div class="datagrid-title">Written as</div><div class="datagrid-content mono"><wo:str value="$usage.name" /></div></div>
+						<div class="datagrid-item"><div class="datagrid-title">Resolves to</div><div class="datagrid-content mono"><wo:str value="$usage.resolvedName" /></div></div>
+						<div class="datagrid-item"><div class="datagrid-title">Class</div><div class="datagrid-content mono">
+							<wo:if condition="$usage.isResolved"><wo:str value="$usage.elementClass.name" /></wo:if>
+							<wo:if condition="$usage.isResolved" negate="$true"><span class="badge bg-red-lt">Doesn't resolve</span></wo:if>
+						</div></div>
+						<div class="datagrid-item"><div class="datagrid-title">Bundle</div><div class="datagrid-content"><wo:str value="$usage.bundle.name" /></div></div>
+						<div class="datagrid-item"><div class="datagrid-title">Uses</div><div class="datagrid-content"><wo:str value="$usage.count" /></div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-8">
+			<div class="card">
+				<div class="card-header"><h3 class="card-title">Used in</h3></div>
+				<div class="table-responsive">
+					<table class="table table-vcenter card-table table-hover">
+						<thead><tr><th>Component</th><th>Bundle</th><th class="text-end">Uses</th></tr></thead>
+						<tbody>
+							<wo:repetition list="$usage.users" item="$currentDefinition">
+								<tr>
+									<td><wo:link actionClass="PLExaminerAction" directActionName="component" ?name="$currentDefinition.name"><wo:str value="$currentDefinition.name" /></wo:link></td>
+									<td class="text-secondary"><wo:str value="$currentDefinition.bundle.name" /></td>
+									<td class="text-end"><wo:str value="$currentUseCount" /></td>
+								</tr>
+							</wo:repetition>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</wo:PLLook>

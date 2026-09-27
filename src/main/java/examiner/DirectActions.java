@@ -1,6 +1,8 @@
 package examiner;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.webobjects.appserver.WODirectAction;
 
@@ -14,6 +16,6 @@ public class DirectActions {
 		return directActionClasses()
 				.stream()
 				.map( DirectActionDefinition::new )
-				.toList();
+				.collect( Collectors.toCollection( ArrayList::new ) );
 	}
 }

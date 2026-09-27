@@ -1,0 +1,19 @@
+<wo:PLLook section="requestHandlers" pretitle="Request handlers" title="Registered request handlers" subtitle="The handler registered for each request handler key.">
+	<div class="card">
+		<div class="table-responsive">
+			<table class="table table-vcenter card-table">
+				<thead><tr><th>Key</th><th>Class</th><th>Package</th><th></th></tr></thead>
+				<tbody>
+					<wo:repetition list="$examination.requestHandlerDefinitions" item="$currentHandler">
+						<tr>
+							<td class="mono"><wo:str value="$currentHandler.key" /></td>
+							<td><wo:str value="$currentHandler.requestHandler.class.simpleName" /></td>
+							<td class="text-secondary"><wo:str value="$currentHandler.requestHandler.class.packageName" /></td>
+							<td><wo:if condition="$currentIsDefault"><span class="badge bg-azure-lt">Default</span></wo:if></td>
+						</tr>
+					</wo:repetition>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</wo:PLLook>

@@ -1,114 +1,44 @@
 package examiner.components;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import com.webobjects.appserver.WOActionResults;
+import com.webobjects.appserver.WOComponent;
 import com.webobjects.appserver.WOContext;
-import com.webobjects.appserver.WORequestHandler;
-import com.webobjects.foundation.NSBundle;
 
-import er.extensions.components.ERXComponent;
-import examiner.BundleDefinition;
-import examiner.DirectActionDefinition;
-import examiner.DirectActions;
 import examiner.ElementDefinition;
-import examiner.ElementDefinitions;
-import ng.appserver.templating.parser.model.PBasicNode;
+import examiner.Examination;
+import examiner.Examination.ElementUsage;
 
-// List Direct Action classes
-// List Bundles
-// List Request handlers
+/**
+ * The dashboard's overview: counts per section, and the problems found
+ */
+public class PLExaminerMain extends WOComponent {
 
-public class PLExaminerMain extends ERXComponent {
-
-	public ElementDefinition currentElementDefinition;
-	public DirectActionDefinition currentDirectAction;
-	public RequestHandlerDefinition currentRequestHandler;
-	public BundleDefinition currentBundle;
-
-	private List<ElementDefinition> _elementDefinitions;
+	public ElementDefinition currentDefinition;
+	public ElementUsage currentUsage;
 
 	public PLExaminerMain( WOContext context ) {
 		super( context );
 	}
 
-	public List<ElementDefinition> elementDefinitions() {
-		if( _elementDefinitions == null ) {
-			_elementDefinitions = ElementDefinitions.elementDefinitions();
-
-		}
-		return _elementDefinitions;
+	public Examination examination() {
+		return Examination.current();
 	}
 
-	public List<DirectActionDefinition> directActionDefinitions() {
-		return DirectActions.directActionDefinitions();
-	}
-
-	public List<BundleDefinition> bundleDefinitions() {
-		return NSBundle
-				._allBundlesReally()
-				.stream()
-				.map( BundleDefinition::new )
-				.toList();
-	}
-
-	public WOActionResults viewElementDefinition() {
-		final PLElementDefinitionDetailPage nextPage = pageWithName( PLElementDefinitionDetailPage.class );
-		nextPage.selectedObject = currentElementDefinition;
-		return nextPage;
+	public List<ElementUsage> topElementUsages() {
+		final List<ElementUsage> all = examination().elementUsages();
+		return new ArrayList<>( all.subList( 0, Math.min( 15, all.size() ) ) );
 	}
 
 	/**
-	 * An element name and how many times the templates use it
+	 * @return The line of the current component's parse error, or null if unknown
 	 */
-	public record ElementUsage( String name, int count ) {}
-
-	public ElementUsage currentUsage;
-
-	/**
-	 * @return The elements the templates use, most used first
-	 */
-	public List<ElementUsage> elementUsages() {
-		return usedElements()
-				.entrySet()
-				.stream()
-				.map( e -> new ElementUsage( e.getKey(), e.getValue() ) )
-				.sorted( Comparator.comparing( ElementUsage::count ).reversed().thenComparing( ElementUsage::name ) )
-				.toList();
+	public Integer currentParseErrorLine() {
+		return currentDefinition.parseErrorLine() > 0 ? currentDefinition.parseErrorLine() : null;
 	}
 
-	public Map<String, Integer> usedElements() {
-		final Map<String, Integer> map = new HashMap<>();
-
-		for( final ElementDefinition elementDefinition : elementDefinitions() ) {
-			for( PBasicNode node : elementDefinition.dynamicNodes() ) {
-				map.merge( node.type(), 1, Integer::sum );
-			}
-		}
-
-		return map;
-	}
-
-	// FIXME: Move to separate file
-	public record RequestHandlerDefinition( String key, WORequestHandler requestHandler ) {}
-
-	public List<RequestHandlerDefinition> requestHandlerDefinitions() {
-		final List<RequestHandlerDefinition> l = new ArrayList<>();
-
-		for( Object object : application().registeredRequestHandlerKeys() ) {
-			final String key = object.toString();
-			final WORequestHandler handler = application().requestHandlerForKey( key );
-			l.add( new RequestHandlerDefinition( key, handler ) );
-		}
-
-		Collections.sort( l, Comparator.comparing( r -> r.requestHandler().getClass().getName() ) );
-
-		return l;
+	public String parseFailureCountClass() {
+		return examination().parseFailures().isEmpty() ? "h1 mb-1 text-green" : "h1 mb-1 text-red";
 	}
 }

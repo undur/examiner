@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.webobjects.appserver.WOContext;
 
-import er.extensions.components.ERXNonSynchronizingComponent;
+import com.webobjects.appserver.WOComponent;
 import ng.appserver.templating.parser.model.PBasicNode;
 import ng.appserver.templating.parser.model.PCommentNode;
 import ng.appserver.templating.parser.model.PHTMLNode;
@@ -12,7 +12,13 @@ import ng.appserver.templating.parser.model.PNode;
 import ng.appserver.templating.parser.model.PRawNode;
 import ng.appserver.templating.parser.model.PRootNode;
 
-public class PLNodePreview extends ERXNonSynchronizingComponent {
+public class PLNodePreview extends WOComponent {
+
+	@Override
+	public boolean synchronizesVariablesWithBindings() {
+		return false;
+	}
+
 
 	public PNode node() {
 		return (PNode)valueForBinding( "node" );
@@ -54,8 +60,11 @@ public class PLNodePreview extends ERXNonSynchronizingComponent {
 		return node() instanceof PHTMLNode;
 	}
 
-	public boolean escapeHTML() {
-		return !nodeIsHTMLString();
+	/**
+	 * @return true if the node is static HTML consisting only of whitespace, which the preview leaves out
+	 */
+	public boolean isBlank() {
+		return node() instanceof PHTMLNode n && n.value().isBlank();
 	}
 
 	public boolean omitTags() {

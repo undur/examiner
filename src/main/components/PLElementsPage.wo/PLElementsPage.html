@@ -1,0 +1,30 @@
+<wo:PLLook section="elements" pretitle="Elements" title="Elements in use" subtitle="Every element name the templates use, what it resolves to at runtime, and how often it's used.">
+	<div class="card">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><wo:link actionClass="PLExaminerAction" directActionName="elements" class="$applicationTabClass">In the application's templates <span class="badge bg-secondary-lt ms-1"><wo:str value="$examination.elementUsages.size" /></span></wo:link></li>
+				<li class="nav-item"><wo:link actionClass="PLExaminerAction" directActionName="elements" ?scope="all" class="$allTabClass">In all templates <span class="badge bg-secondary-lt ms-1"><wo:str value="$examination.allElementUsages.size" /></span></wo:link></li>
+			</ul>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-vcenter card-table table-hover">
+				<thead><tr><th>Element</th><th>Resolves to</th><th>Class</th><th>Bundle</th><th class="text-end">Uses</th><th class="text-end">Components</th></tr></thead>
+				<tbody>
+					<wo:repetition list="$usages" item="$currentUsage">
+						<tr>
+							<td><wo:link actionClass="PLExaminerAction" directActionName="element" ?name="$currentUsage.name" class="mono"><wo:str value="$currentUsage.name" /></wo:link></td>
+							<td class="mono text-secondary"><wo:if condition="$currentUsage.isAlias"><wo:str value="$currentUsage.resolvedName" /></wo:if></td>
+							<td class="mono">
+								<wo:if condition="$currentUsage.isResolved"><wo:str value="$currentUsage.elementClass.name" /></wo:if>
+								<wo:if condition="$currentUsage.isResolved" negate="$true"><span class="badge bg-red-lt">Doesn't resolve</span></wo:if>
+							</td>
+							<td class="text-secondary"><wo:str value="$currentUsage.bundle.name" /></td>
+							<td class="text-end"><wo:str value="$currentUsage.count" /></td>
+							<td class="text-end"><wo:str value="$currentUsage.users.size" /></td>
+						</tr>
+					</wo:repetition>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</wo:PLLook>

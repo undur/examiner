@@ -30,12 +30,9 @@ public class Util {
 		Comparator c1 = Comparator.comparing( ( Class c ) -> c.getPackageName() );
 		Comparator c2 = Comparator.comparing( ( Class c ) -> c.getSimpleName() );
 
-		List sorted = elementClasses
-				.stream()
-				.sorted( c1.thenComparing( c2 ) )
-				.toList();
-
-		return new ArrayList<>( sorted );
+		final List sorted = new ArrayList<>( elementClasses );
+		sorted.sort( c1.thenComparing( c2 ) );
+		return sorted;
 	}
 
 	/**

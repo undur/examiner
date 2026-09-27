@@ -1,148 +1,115 @@
-<wo:PLLook>
-	<div class="row">
-		<div class="col">
+<wo:PLLook section="overview" pretitle="Overview" title="$examination.applicationName" subtitle="What the application consists of, and what its templates use.">
+	<div class="row row-deck row-cards">
+		<div class="col-sm-6 col-lg-3">
+			<wo:link actionClass="PLExaminerAction" directActionName="components" class="card card-link card-link-pop">
+				<div class="card-body">
+						<div class="subheader">Components</div>
+						<div class="h1 mb-1"><wo:str value="$examination.applicationComponents.size" /></div>
+						<div class="text-secondary">in the application, <wo:str value="$examination.components.size" /> with frameworks</div>
+					</div>
+			</wo:link>
+		</div>
+		<div class="col-sm-6 col-lg-3">
+			<wo:link actionClass="PLExaminerAction" directActionName="components" ?scope="all" class="card card-link card-link-pop">
+				<div class="card-body">
+						<div class="subheader">Templates that don't parse</div>
+						<wo:container elementName="div" class="$parseFailureCountClass"><wo:str value="$examination.parseFailures.size" /></wo:container>
+						<div class="text-secondary">with Parsley's parser</div>
+					</div>
+			</wo:link>
+		</div>
+		<div class="col-sm-6 col-lg-3">
+			<wo:link actionClass="PLExaminerAction" directActionName="elements" class="card card-link card-link-pop">
+				<div class="card-body">
+						<div class="subheader">Elements in use</div>
+						<div class="h1 mb-1"><wo:str value="$examination.elementUsages.size" /></div>
+						<div class="text-secondary"><wo:str value="$examination.unresolvedElementUsages.size" /> that don't resolve to a class</div>
+					</div>
+			</wo:link>
+		</div>
+		<div class="col-sm-6 col-lg-3">
+			<wo:link actionClass="PLExaminerAction" directActionName="directActions" class="card card-link card-link-pop">
+				<div class="card-body">
+						<div class="subheader">Direct action classes</div>
+						<div class="h1 mb-1"><wo:str value="$examination.directActionDefinitions.size" /></div>
+						<div class="text-secondary"><wo:str value="$examination.requestHandlerDefinitions.size" /> request handlers, <wo:str value="$examination.bundleDefinitions.size" /> bundles</div>
+					</div>
+			</wo:link>
+		</div>
+	</div>
+
+	<div class="row row-cards mt-2">
+		<div class="col-lg-7">
 			<div class="card">
 				<div class="card-header">
-					<h3 class="card-title">Direct actions</h3>
+					<h3 class="card-title">Templates that don't parse</h3>
 				</div>
-				<table class="table table-sm table-condensed card-table">
-					<tr>
-						<th></th>
-						<th>Package</th>
-						<th>Name</th>
-						<th>Bundle</th>
-						<th>Superclass</th>
-						<th></th>
-						<th>DA methods</th>
-					</tr>
-					<wo:repetition list="$directActionDefinitions" item="$currentDirectAction">
-						<tr>
-							<td>
-								<wo:link action="$viewDirectAction">
-									<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-								</wo:link>
-							</td>
-							<td><wo:str value="$currentDirectAction.directActionClass.packageName" /></td>
-							<td><wo:str value="$currentDirectAction.directActionClass.simpleName" /></td>
-							<td><wo:str value="$currentDirectAction.bundle.name" /></td>
-							<td><wo:str value="$currentDirectAction.directActionClass.superclass.simpleName" /></td>
-							<td><wo:if condition="$currentDirectAction.isAbstract"><span class="badge badge-info">abstract</span></wo:if></td>
-							<td><wo:str value="$currentDirectAction.directActionMethods.size" /></td>
-						</tr>
-					</wo:repetition>
-				</table>
+				<wo:if condition="$examination.parseFailures.isEmpty">
+					<div class="card-body text-secondary">Every template parses.</div>
+				</wo:if>
+				<wo:if condition="$examination.parseFailures.isEmpty" negate="$true">
+					<div class="table-responsive">
+						<table class="table table-vcenter card-table">
+							<thead><tr><th>Component</th><th>Bundle</th><th>Line</th><th>Error</th></tr></thead>
+							<tbody>
+								<wo:repetition list="$examination.parseFailures" item="$currentDefinition">
+									<tr>
+										<td><wo:link actionClass="PLExaminerAction" directActionName="component" ?name="$currentDefinition.name"><wo:str value="$currentDefinition.name" /></wo:link></td>
+										<td class="text-secondary"><wo:str value="$currentDefinition.bundle.name" /></td>
+										<td class="text-secondary"><wo:str value="$currentParseErrorLine" /></td>
+										<td class="wrap text-danger"><wo:str value="$currentDefinition.parseError" /></td>
+									</tr>
+								</wo:repetition>
+							</tbody>
+						</table>
+					</div>
+				</wo:if>
 			</div>
 			<div class="card mt-3">
 				<div class="card-header">
-					<h3 class="card-title">Registered request handlers</h3>
+					<h3 class="card-title">Element names that don't resolve</h3>
 				</div>
-				<table class="table table-sm table-condensed card-table">
-					<tr>
-						<th></th>
-						<th>Package</th>
-						<th>Class</th>
-						<th>Key</th>
-					</tr>
-					<wo:repetition list="$requestHandlerDefinitions" item="$currentRequestHandler">
-						<tr>
-							<td>
-								<wo:link action="$viewRequestHandler">
-									<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-								</wo:link>
-							</td>
-							<td><wo:str value="$currentRequestHandler.requestHandler.class.package.name" /></td>
-							<td><wo:str value="$currentRequestHandler.requestHandler.class.simpleName" /></td>
-							<td><wo:str value="$currentRequestHandler.key" /></td>
-						</tr>
-					</wo:repetition>
-				</table>
+				<wo:if condition="$examination.unresolvedElementUsages.isEmpty">
+					<div class="card-body text-secondary">Every element name in the templates resolves to a class.</div>
+				</wo:if>
+				<wo:if condition="$examination.unresolvedElementUsages.isEmpty" negate="$true">
+					<div class="table-responsive">
+						<table class="table table-vcenter card-table">
+							<thead><tr><th>Element</th><th class="text-end">Uses</th><th>In</th></tr></thead>
+							<tbody>
+								<wo:repetition list="$examination.unresolvedElementUsages" item="$currentUsage">
+									<tr>
+										<td><wo:link actionClass="PLExaminerAction" directActionName="element" ?name="$currentUsage.name" class="mono"><wo:str value="$currentUsage.name" /></wo:link></td>
+										<td class="text-end"><wo:str value="$currentUsage.count" /></td>
+										<td class="text-secondary"><wo:str value="$currentUsage.users.size" /> components</td>
+									</tr>
+								</wo:repetition>
+							</tbody>
+						</table>
+					</div>
+				</wo:if>
 			</div>
 		</div>
-		<div class="col">
+		<div class="col-lg-5">
 			<div class="card">
 				<div class="card-header">
-					<h3 class="card-title">Bundles</h3>
+					<h3 class="card-title">Most used elements</h3>
 				</div>
-				<table class="table table-sm table-condensed card-table">
-					<tr>
-						<th></th>
-						<th>Name</th>
-						<th>Type</th>
-						<th>Version</th>
-						<th></th>
-					</tr>
-					<wo:repetition list="$bundleDefinitions" item="$currentBundle">
-						<tr>
-							<td>
-								<wo:link action="$viewDirectAction">
-									<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-								</wo:link>
-							</td>
-							<td><wo:str value="$currentBundle.bundle.name" /></td>
-							<td><wo:str value="$currentBundle.bundle.class.simpleName" /></td>
-							<td><wo:str value="$currentBundle.bundle.versionString" /></td>
-							<td>
-								<wo:if condition="$currentBundle.isMain">
-									<span class="badge bg-azure text-azure-fg">Main bundle</span>
-								</wo:if>
-							</td>
-						</tr>
-					</wo:repetition>
-				</table>
-			</div>
-		</div>
-	</div>
-	<div class="row mt-3">
-		<div class="col">
-			<div class="card">
-				<div class="card-header">
-					<h3 class="card-title">Elements</h3>
+				<div class="table-responsive">
+					<table class="table table-vcenter card-table">
+						<thead><tr><th>Element</th><th>Resolves to</th><th class="text-end">Uses</th></tr></thead>
+						<tbody>
+							<wo:repetition list="$topElementUsages" item="$currentUsage">
+								<tr>
+									<td><wo:link actionClass="PLExaminerAction" directActionName="element" ?name="$currentUsage.name" class="mono"><wo:str value="$currentUsage.name" /></wo:link></td>
+									<td class="text-secondary mono"><wo:if condition="$currentUsage.isAlias"><wo:str value="$currentUsage.resolvedName" /></wo:if></td>
+									<td class="text-end"><wo:str value="$currentUsage.count" /></td>
+								</tr>
+							</wo:repetition>
+						</tbody>
+					</table>
 				</div>
-				<table class="table table-sm table-condensed">
-					<tr>
-						<th></th>
-						<th>Package</th>
-						<th>Name</th>
-						<th>Bundle</th>
-						<th>Type</th>
-						<th>Replaced by</th>
-					</tr>
-					<wo:repetition list="$elementDefinitions" item="$currentElementDefinition">
-						<tr>
-							<td>
-								<wo:link action="$viewElementDefinition">
-									<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-								</wo:link>
-							</td>
-							<td><wo:str value="$currentElementDefinition.elementClass.packageName" /></td>
-							<td><wo:str value="$currentElementDefinition.name" /></td>
-							<td><wo:str value="$currentElementDefinition.bundle.name" /></td>
-							<td><wo:str value="$currentElementDefinition.type" /></td>
-							<td><wo:str value="$currentElementDefinition.replacementElement" /></td>
-						</tr>
-					</wo:repetition>
-				</table>
-			</div>
-		</div>
-	</div>
-	<div class="row mt-3">
-		<div class="col">
-			<div class="card">
-				<div class="card-header">
-					<h3 class="card-title">Used</h3>
-				</div>
-				<table class="table table-sm table-condensed">
-					<tr>
-						<th>Element name</th>
-						<th>Count</th>
-					</tr>
-					<wo:repetition list="$elementUsages" item="$currentUsage">
-						<tr>
-							<td><wo:str value="$currentUsage.name" /></td>
-							<td><wo:str value="$currentUsage.count" /></td>
-						</tr>
-					</wo:repetition>
-				</table>
+				<div class="card-footer"><wo:link actionClass="PLExaminerAction" directActionName="elements">All <wo:str value="$examination.elementUsages.size" /> elements</wo:link></div>
 			</div>
 		</div>
 	</div>
