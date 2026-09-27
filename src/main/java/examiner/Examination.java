@@ -69,12 +69,13 @@ public class Examination {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private Examination() {
 		final Instant start = Instant.now();
 		// Examiner doesn't examine itself
 		_elementDefinitions = ElementDefinitions.elementDefinitions().stream().filter( e -> !isExaminers( e ) ).collect( Collectors.toCollection( ArrayList::new ) );
 		_directActionDefinitions = DirectActions.directActionDefinitions();
-		_bundleDefinitions = NSBundle._allBundlesReally().stream().map( BundleDefinition::new ).sorted( Comparator.comparing( ( BundleDefinition b ) -> !b.isMain() ).thenComparing( b -> b.bundle().name() ) ).collect( Collectors.toCollection( ArrayList::new ) );
+		_bundleDefinitions = ((List<NSBundle>)NSBundle._allBundlesReally()).stream().map( BundleDefinition::new ).sorted( Comparator.comparing( ( BundleDefinition b ) -> !b.isMain() ).thenComparing( b -> b.bundle().name() ) ).collect( Collectors.toCollection( ArrayList::new ) );
 		_requestHandlerDefinitions = requestHandlers();
 		_elementUsages = elementUsages( applicationComponents() );
 		_allElementUsages = elementUsages( components() );

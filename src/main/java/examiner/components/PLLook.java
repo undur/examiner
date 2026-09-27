@@ -6,6 +6,7 @@ import com.webobjects.appserver.WOComponent;
 import com.webobjects.appserver.WOContext;
 import com.webobjects.foundation.NSBundle;
 
+import examiner.BundleDefinition;
 import examiner.Examination;
 
 /**
@@ -70,7 +71,22 @@ public class PLLook extends WOComponent {
 
 	public String webObjectsVersion() {
 		final NSBundle bundle = NSBundle.bundleForName( "JavaWebObjects" );
-		return bundle == null ? "?" : bundle.versionString();
+		return bundle == null ? "?" : BundleDefinition.version( bundle );
+	}
+
+	public String tablerCSSURL() {
+		return resourceURL( "tabler/css/tabler.min.css" );
+	}
+
+	public String tablerJSURL() {
+		return resourceURL( "tabler/js/tabler.min.js" );
+	}
+
+	/**
+	 * @return The URL of one of Examiner's web server resources (plain WebObjects, so Examiner works in any application)
+	 */
+	private String resourceURL( final String name ) {
+		return application().resourceManager().urlForResourceNamed( name, "examiner", null, context().request() );
 	}
 
 	public String javaVersion() {

@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-		<wo:ERXStyleSheet filename="tabler/css/tabler.min.css" framework="examiner"/>
+		<wo:WOGenericElement elementName="link" rel="stylesheet" href="$tablerCSSURL" />
 		<title><wo:str value="$documentTitle" /></title>
 		<style>
 			body { overflow-y: scroll; }
@@ -74,6 +74,6 @@
 				</footer>
 			</div>
 		</div>
-		<wo:ERXJavaScript filename="tabler/js/tabler.min.js" framework="examiner" defer></wo:ERXJavaScript>
+		<wo:WOGenericContainer elementName="script" src="$tablerJSURL" defer="defer"></wo:WOGenericContainer>
 	</body>
 </html>
