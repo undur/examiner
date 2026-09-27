@@ -136,10 +136,10 @@
 						<th>Element name</th>
 						<th>Count</th>
 					</tr>
-					<wo:repetition list="$entries" item="$entry">
+					<wo:repetition list="$elementUsages" item="$currentUsage">
 						<tr>
-							<td><wo:str value="$entry.key" /></td>
-							<td><wo:str value="$entry.value" /></td>
+							<td><wo:str value="$currentUsage.name" /></td>
+							<td><wo:str value="$currentUsage.count" /></td>
 						</tr>
 					</wo:repetition>
 				</table>

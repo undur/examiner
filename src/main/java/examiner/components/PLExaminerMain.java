@@ -64,16 +64,22 @@ public class PLExaminerMain extends ERXComponent {
 		return nextPage;
 	}
 
-	public Map.Entry<String, Integer> entry;
+	/**
+	 * An element name and how many times the templates use it
+	 */
+	public record ElementUsage( String name, int count ) {}
 
-	public List<Map.Entry<String, Integer>> entries() {
-		Comparator<Entry<String, Integer>> c = Comparator.comparing( Map.Entry::getValue );
-		c = c.reversed();
+	public ElementUsage currentUsage;
 
+	/**
+	 * @return The elements the templates use, most used first
+	 */
+	public List<ElementUsage> elementUsages() {
 		return usedElements()
 				.entrySet()
 				.stream()
-				.sorted( c )
+				.map( e -> new ElementUsage( e.getKey(), e.getValue() ) )
+				.sorted( Comparator.comparing( ElementUsage::count ).reversed().thenComparing( ElementUsage::name ) )
 				.toList();
 	}
 
@@ -82,7 +88,7 @@ public class PLExaminerMain extends ERXComponent {
 
 		for( final ElementDefinition elementDefinition : elementDefinitions() ) {
 			for( PBasicNode node : elementDefinition.dynamicNodes() ) {
-				map.merge( node.type(), 0, ( x, y ) -> x + 1 );
+				map.merge( node.type(), 1, Integer::sum );
 			}
 		}
 

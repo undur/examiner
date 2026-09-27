@@ -20,7 +20,10 @@ import ng.appserver.templating.parser.model.PBasicNode;
 import ng.appserver.templating.parser.model.PNode;
 import ng.appserver.templating.parser.model.PRootNode;
 
-public record ElementDefinition( String name, Class<? extends WOElement> elementClass ) {
+/**
+ * An element or component found on the classpath, with its template (if it has one), read and parsed once.
+ */
+public final class ElementDefinition {
 
 	public enum ElementType {
 		Element,
@@ -30,6 +33,21 @@ public record ElementDefinition( String name, Class<? extends WOElement> element
 		Unknown;
 	}
 
+	private final String _name;
+	private final Class<? extends WOElement> _elementClass;
+
+	private boolean _templateRead;
+	private String _htmlString;
+	private String _wodString;
+
+	private boolean _templateParsed;
+	private PRootNode _template;
+	private String _parseError;
+	private int _parseErrorLine = -1;
+	private int _parseErrorColumn = -1;
+
+	private List<PBasicNode> _dynamicNodes;
+
 	ElementDefinition( Class<? extends WOElement> elementClass ) {
 		this( elementClass.getSimpleName(), elementClass );
 	}
@@ -38,41 +56,52 @@ public record ElementDefinition( String name, Class<? extends WOElement> element
 		this( name, null );
 	}
 
+	private ElementDefinition( String name, Class<? extends WOElement> elementClass ) {
+		_name = name;
+		_elementClass = elementClass;
+	}
+
+	public String name() {
+		return _name;
+	}
+
+	public Class<? extends WOElement> elementClass() {
+		return _elementClass;
+	}
+
 	public NSBundle bundle() {
-		return NSBundle.bundleForClass( elementClass() );
+		return _elementClass == null ? null : NSBundle.bundleForClass( _elementClass );
 	}
 
 	public String htmlString() {
-		final NSBundle bundle = bundle();
-
-		if( bundle == null ) {
-			return null;
-		}
-
-		// First, check the most common way of looking for a combined template
-		String path = "%s.wo/%s.html".formatted( name(), name() );
-		URL url = bundle.pathURLForResourcePath( path );
-
-		// If we didn't find anything, try looking in NonLocalized.lproj
-		// FIXME: We're currently not handling localized components. Might want to consider that
-		if( url == null ) {
-			path = "NonLocalized.lproj/%s.wo/%s.html".formatted( name(), name() );
-			url = bundle.pathURLForResourcePath( path );
-		}
-
-		if( url != null ) {
-			try( InputStream is = url.openStream()) {
-				return new String( is.readAllBytes() );
-			}
-			catch( IOException e ) {
-				throw new UncheckedIOException( e );
-			}
-		}
-
-		return null;
+		readTemplate();
+		return _htmlString;
 	}
 
 	public String wodString() {
+		readTemplate();
+		return _wodString;
+	}
+
+	/**
+	 * @return true if the element has a template (an .html file in a .wo folder)
+	 */
+	public boolean hasTemplate() {
+		return htmlString() != null;
+	}
+
+	private void readTemplate() {
+		if( !_templateRead ) {
+			_htmlString = templateFileString( "html" );
+			_wodString = templateFileString( "wod" );
+			_templateRead = true;
+		}
+	}
+
+	/**
+	 * @return The contents of the component's template file with the given extension, or null if there's none
+	 */
+	private String templateFileString( final String extension ) {
 		final NSBundle bundle = bundle();
 
 		if( bundle == null ) {
@@ -80,26 +109,26 @@ public record ElementDefinition( String name, Class<? extends WOElement> element
 		}
 
 		// First, check the most common way of looking for a combined template
-		String path = "%s.wo/%s.wod".formatted( name(), name() );
+		String path = "%s.wo/%s.%s".formatted( name(), name(), extension );
 		URL url = bundle.pathURLForResourcePath( path );
 
 		// If we didn't find anything, try looking in NonLocalized.lproj
 		// FIXME: We're currently not handling localized components. Might want to consider that
 		if( url == null ) {
-			path = "NonLocalized.lproj/%s.wo/%s.wod".formatted( name(), name() );
+			path = "NonLocalized.lproj/%s.wo/%s.%s".formatted( name(), name(), extension );
 			url = bundle.pathURLForResourcePath( path );
 		}
 
-		if( url != null ) {
-			try( InputStream is = url.openStream()) {
-				return new String( is.readAllBytes() );
-			}
-			catch( IOException e ) {
-				throw new UncheckedIOException( e );
-			}
+		if( url == null ) {
+			return null;
 		}
 
-		return null;
+		try( InputStream is = url.openStream() ) {
+			return new String( is.readAllBytes() );
+		}
+		catch( IOException e ) {
+			throw new UncheckedIOException( e );
+		}
 	}
 
 	public String replacementElement() {
@@ -145,10 +174,6 @@ public record ElementDefinition( String name, Class<? extends WOElement> element
 		}
 
 		throw new IllegalArgumentException( "Unknown element type: " + elementClass() );
-		// single-file template
-		// htmlString
-		// wodString
-		// apiString
 	}
 
 	/**
@@ -158,17 +183,68 @@ public record ElementDefinition( String name, Class<? extends WOElement> element
 		return false;
 	}
 
+	/**
+	 * @return The parsed template, or null if the element has none or it failed to parse (see {@link #parseError()})
+	 */
 	public PRootNode template() {
+		parseTemplate();
+		return _template;
+	}
 
-		if( htmlString() == null ) {
-			return null;
+	/**
+	 * @return The parser's message if the template failed to parse, otherwise null
+	 */
+	public String parseError() {
+		parseTemplate();
+		return _parseError;
+	}
+
+	/**
+	 * @return The line of the parse error in the HTML template, or -1 if unknown
+	 */
+	public int parseErrorLine() {
+		parseTemplate();
+		return _parseErrorLine;
+	}
+
+	/**
+	 * @return The column of the parse error in the HTML template, or -1 if unknown
+	 */
+	public int parseErrorColumn() {
+		parseTemplate();
+		return _parseErrorColumn;
+	}
+
+	/**
+	 * @return true if the element has a template that parsed
+	 */
+	public boolean parses() {
+		return template() != null;
+	}
+
+	private void parseTemplate() {
+		if( _templateParsed ) {
+			return;
+		}
+
+		_templateParsed = true;
+
+		if( !hasTemplate() ) {
+			return;
 		}
 
 		try {
-			return (PRootNode)new NGTemplateParser( htmlString(), wodString() ).parse();
+			// A component with an inline template has no .wod
+			final String wod = wodString() != null ? wodString() : "";
+			_template = (PRootNode)new NGTemplateParser( htmlString(), wod ).parse();
 		}
-		catch( NGDeclarationFormatException | NGHTMLFormatException e ) {
-			throw new RuntimeException( e );
+		catch( NGHTMLFormatException e ) {
+			_parseError = e.getMessage();
+			_parseErrorLine = e.line();
+			_parseErrorColumn = e.column();
+		}
+		catch( NGDeclarationFormatException | RuntimeException e ) {
+			_parseError = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
 		}
 	}
 
@@ -177,16 +253,18 @@ public record ElementDefinition( String name, Class<? extends WOElement> element
 	 */
 	public List<PBasicNode> dynamicNodes() {
 
-		if( template() == null ) {
-			return new ArrayList<>();
+		if( _dynamicNodes == null ) {
+			_dynamicNodes = new ArrayList<>();
+
+			if( template() != null ) {
+				collectBasicNodes( template(), _dynamicNodes );
+			}
 		}
 
-		final List<PBasicNode> nodes = new ArrayList<>();
-		collectBasicNodes( template(), nodes );
-		return nodes;
+		return _dynamicNodes;
 	}
 
-	private void collectBasicNodes( PNode node, List<PBasicNode> result ) {
+	private static void collectBasicNodes( PNode node, List<PBasicNode> result ) {
 
 		// FIXME. Sucky sucky, checking twice for child-containing types. We should really have a "hasChildren" interface on the nodes or something // Hugi 2025-06-20
 

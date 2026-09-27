@@ -21,34 +21,13 @@ public class PLElementDefinitionDetailPage extends WOComponent {
 	}
 
 	public String currentBindingsString() {
-		List<String> descriptions = new ArrayList<>();
+		final List<String> descriptions = new ArrayList<>();
 
 		for( Entry<String, NGBindingValue> binding : currentNode.bindings().entrySet() ) {
-			final String bKey = binding.getKey();
-			final NGBindingValue bValue = binding.getValue();
-
-			final StringBuilder b = new StringBuilder();
-
-			b.append( bKey );
-			b.append( "=" );
-
-			if( currentNode.isInline() ) {
-				b.append( "bValue.value()" );
-			}
-			else {
-				// FIXME: This isQuoted stuff just _needs_ to get fixed in the parser // Hugi 2025-06-21
-				/*
-				if( bValue.isQuoted() ) {
-					b.append( "\"%s\"".formatted( bValue.value() ) );
-				}
-				else {
-					b.append( "$" + bValue.value() );
-				}
-				*/
-				b.append( "Trololololo" );
-			}
-
-			descriptions.add( b.toString() );
+			descriptions.add( switch( binding.getValue() ) {
+				case NGBindingValue.Value v -> binding.getKey() + "=" + (v.isQuoted() ? "\"" + v.value() + "\"" : v.value());
+				case NGBindingValue.BooleanPresence b -> binding.getKey();
+			} );
 		}
 
 		return String.join( ", ", descriptions );
